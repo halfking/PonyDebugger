@@ -22,7 +22,7 @@
 #import "PDRuntimeDomainController.h"
 #import "PDPageDomainController.h"
 #import "PDIndexedDBDomainController.h"
-
+#import "PDFScriptRuntimeDomainController.h"
 
 static NSString *const PDClientIDKey = @"com.squareup.PDDebugger.clientID";
 
@@ -261,6 +261,12 @@ static NSString *const PDClientIDKey = @"com.squareup.PDDebugger.clientID";
 - (void)removeManagedObjectContext:(NSManagedObjectContext *)context;
 {
     [[PDIndexedDBDomainController defaultInstance] removeManagedObjectContext:context];
+}
+
+#pragma mark Runtime Debugging
+- (void) enableFScriptRuntimeDebugging
+{
+  [self _addController:[PDFScriptRuntimeDomainController defaultInstance]];
 }
 
 #pragma mark - Private Methods

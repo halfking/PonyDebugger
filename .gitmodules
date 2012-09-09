@@ -4,3 +4,6 @@
 [submodule "ObjC/SocketRocket"]
 	path = ObjC/SocketRocket
 	url = https://github.com/square/SocketRocket.git 
+[submodule "ObjC/F-Script"]
+	path = ObjC/F-Script
+	url = git://github.com/pablomarx/F-Script.git

@@ -40,6 +40,9 @@
 - (void)addManagedObjectContext:(NSManagedObjectContext *)context withName:(NSString *)name;
 - (void)removeManagedObjectContext:(NSManagedObjectContext *)context;
 
+// Runtime debugging
+- (void)enableFScriptRuntimeDebugging;
+
 @end
 
 @interface NSDate (PDDebugger)

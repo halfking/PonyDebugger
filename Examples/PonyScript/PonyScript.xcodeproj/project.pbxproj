@@ -1,0 +1,386 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F153051715FCFBD6006AE515 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F153051615FCFBD6006AE515 /* AudioToolbox.framework */; };
+		F153058F15FD02CC006AE515 /* libFScript.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F153058D15FD02CC006AE515 /* libFScript.a */; };
+		F153059015FD02CC006AE515 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F153058E15FD02CC006AE515 /* libSocketRocket.a */; };
+		F153059115FD0311006AE515 /* libPonyDebugger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F153058515FD02A8006AE515 /* libPonyDebugger.a */; };
+		F1E1D85E15FC417000FB6DA0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1E1D85D15FC417000FB6DA0 /* UIKit.framework */; };
+		F1E1D86015FC417000FB6DA0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1E1D85F15FC417000FB6DA0 /* Foundation.framework */; };
+		F1E1D86215FC417000FB6DA0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1E1D86115FC417000FB6DA0 /* CoreGraphics.framework */; };
+		F1E1D86815FC417000FB6DA0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F1E1D86615FC417000FB6DA0 /* InfoPlist.strings */; };
+		F1E1D86A15FC417000FB6DA0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1E1D86915FC417000FB6DA0 /* main.m */; };
+		F1E1D86E15FC417100FB6DA0 /* PSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1E1D86D15FC417100FB6DA0 /* PSAppDelegate.m */; };
+		F1E1D87115FC417100FB6DA0 /* PSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1E1D87015FC417100FB6DA0 /* PSViewController.m */; };
+		F1E1D87415FC417100FB6DA0 /* PSViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1E1D87215FC417100FB6DA0 /* PSViewController_iPhone.xib */; };
+		F1E1D87715FC417100FB6DA0 /* PSViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1E1D87515FC417100FB6DA0 /* PSViewController_iPad.xib */; };
+		F1E1D89115FC41ED00FB6DA0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1E1D88F15FC41ED00FB6DA0 /* CoreData.framework */; };
+		F1E1D89315FC423E00FB6DA0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1E1D89215FC423E00FB6DA0 /* CFNetwork.framework */; };
+		F1E1D89515FC424300FB6DA0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1E1D89415FC424300FB6DA0 /* Security.framework */; };
+		F1E1D89715FC42CC00FB6DA0 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F1E1D89615FC42CC00FB6DA0 /* libicucore.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F153058415FD02A8006AE515 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F153057315FD02A7006AE515 /* PonyDebugger.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F683ADAC14FC1B4C008EBBA7;
+			remoteInfo = PonyDebugger;
+		};
+		F153058B15FD02B7006AE515 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F153057315FD02A7006AE515 /* PonyDebugger.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F683ADAB14FC1B4C008EBBA7;
+			remoteInfo = PonyDebugger;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F153051615FCFBD6006AE515 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		F153057315FD02A7006AE515 /* PonyDebugger.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PonyDebugger.xcodeproj; path = ../../ObjC/PonyDebugger.xcodeproj; sourceTree = "<group>"; };
+		F153058D15FD02CC006AE515 /* libFScript.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libFScript.a; path = "../../ObjC/F-Script/build/Release-iphoneos/libFScript.a"; sourceTree = "<group>"; };
+		F153058E15FD02CC006AE515 /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libSocketRocket.a; path = "../../ObjC/SocketRocket/build/Release-iphoneos/libSocketRocket.a"; sourceTree = "<group>"; };
+		F1E1D85915FC417000FB6DA0 /* PonyScript.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PonyScript.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1E1D85D15FC417000FB6DA0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		F1E1D85F15FC417000FB6DA0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F1E1D86115FC417000FB6DA0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F1E1D86515FC417000FB6DA0 /* PonyScript-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PonyScript-Info.plist"; sourceTree = "<group>"; };
+		F1E1D86715FC417000FB6DA0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F1E1D86915FC417000FB6DA0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F1E1D86B15FC417100FB6DA0 /* PonyScript-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PonyScript-Prefix.pch"; sourceTree = "<group>"; };
+		F1E1D86C15FC417100FB6DA0 /* PSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PSAppDelegate.h; sourceTree = "<group>"; };
+		F1E1D86D15FC417100FB6DA0 /* PSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PSAppDelegate.m; sourceTree = "<group>"; };
+		F1E1D86F15FC417100FB6DA0 /* PSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PSViewController.h; sourceTree = "<group>"; };
+		F1E1D87015FC417100FB6DA0 /* PSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PSViewController.m; sourceTree = "<group>"; };
+		F1E1D87315FC417100FB6DA0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PSViewController_iPhone.xib; sourceTree = "<group>"; };
+		F1E1D87615FC417100FB6DA0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PSViewController_iPad.xib; sourceTree = "<group>"; };
+		F1E1D88F15FC41ED00FB6DA0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F1E1D89215FC423E00FB6DA0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		F1E1D89415FC424300FB6DA0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		F1E1D89615FC42CC00FB6DA0 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F1E1D85615FC417000FB6DA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F153059115FD0311006AE515 /* libPonyDebugger.a in Frameworks */,
+				F153058F15FD02CC006AE515 /* libFScript.a in Frameworks */,
+				F153059015FD02CC006AE515 /* libSocketRocket.a in Frameworks */,
+				F153051715FCFBD6006AE515 /* AudioToolbox.framework in Frameworks */,
+				F1E1D89715FC42CC00FB6DA0 /* libicucore.dylib in Frameworks */,
+				F1E1D89515FC424300FB6DA0 /* Security.framework in Frameworks */,
+				F1E1D89315FC423E00FB6DA0 /* CFNetwork.framework in Frameworks */,
+				F1E1D89115FC41ED00FB6DA0 /* CoreData.framework in Frameworks */,
+				F1E1D85E15FC417000FB6DA0 /* UIKit.framework in Frameworks */,
+				F1E1D86015FC417000FB6DA0 /* Foundation.framework in Frameworks */,
+				F1E1D86215FC417000FB6DA0 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F153057415FD02A7006AE515 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F153058515FD02A8006AE515 /* libPonyDebugger.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1E1D84E15FC417000FB6DA0 = {
+			isa = PBXGroup;
+			children = (
+				F153057315FD02A7006AE515 /* PonyDebugger.xcodeproj */,
+				F1E1D86315FC417000FB6DA0 /* PonyScript */,
+				F1E1D85C15FC417000FB6DA0 /* Frameworks */,
+				F1E1D85A15FC417000FB6DA0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F1E1D85A15FC417000FB6DA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1E1D85915FC417000FB6DA0 /* PonyScript.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1E1D85C15FC417000FB6DA0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F153051615FCFBD6006AE515 /* AudioToolbox.framework */,
+				F1E1D89215FC423E00FB6DA0 /* CFNetwork.framework */,
+				F1E1D88F15FC41ED00FB6DA0 /* CoreData.framework */,
+				F1E1D86115FC417000FB6DA0 /* CoreGraphics.framework */,
+				F1E1D85F15FC417000FB6DA0 /* Foundation.framework */,
+				F153058D15FD02CC006AE515 /* libFScript.a */,
+				F1E1D89615FC42CC00FB6DA0 /* libicucore.dylib */,
+				F153058E15FD02CC006AE515 /* libSocketRocket.a */,
+				F1E1D89415FC424300FB6DA0 /* Security.framework */,
+				F1E1D85D15FC417000FB6DA0 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F1E1D86315FC417000FB6DA0 /* PonyScript */ = {
+			isa = PBXGroup;
+			children = (
+				F1E1D86C15FC417100FB6DA0 /* PSAppDelegate.h */,
+				F1E1D86D15FC417100FB6DA0 /* PSAppDelegate.m */,
+				F1E1D86F15FC417100FB6DA0 /* PSViewController.h */,
+				F1E1D87015FC417100FB6DA0 /* PSViewController.m */,
+				F1E1D87215FC417100FB6DA0 /* PSViewController_iPhone.xib */,
+				F1E1D87515FC417100FB6DA0 /* PSViewController_iPad.xib */,
+				F1E1D86415FC417000FB6DA0 /* Supporting Files */,
+			);
+			path = PonyScript;
+			sourceTree = "<group>";
+		};
+		F1E1D86415FC417000FB6DA0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F1E1D86515FC417000FB6DA0 /* PonyScript-Info.plist */,
+				F1E1D86615FC417000FB6DA0 /* InfoPlist.strings */,
+				F1E1D86915FC417000FB6DA0 /* main.m */,
+				F1E1D86B15FC417100FB6DA0 /* PonyScript-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F1E1D85815FC417000FB6DA0 /* PonyScript */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1E1D87A15FC417100FB6DA0 /* Build configuration list for PBXNativeTarget "PonyScript" */;
+			buildPhases = (
+				F1E1D85515FC417000FB6DA0 /* Sources */,
+				F1E1D85615FC417000FB6DA0 /* Frameworks */,
+				F1E1D85715FC417000FB6DA0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F153058C15FD02B7006AE515 /* PBXTargetDependency */,
+			);
+			name = PonyScript;
+			productName = PonyScript;
+			productReference = F1E1D85915FC417000FB6DA0 /* PonyScript.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F1E1D85015FC417000FB6DA0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = PS;
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Steve White";
+			};
+			buildConfigurationList = F1E1D85315FC417000FB6DA0 /* Build configuration list for PBXProject "PonyScript" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F1E1D84E15FC417000FB6DA0;
+			productRefGroup = F1E1D85A15FC417000FB6DA0 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = F153057415FD02A7006AE515 /* Products */;
+					ProjectRef = F153057315FD02A7006AE515 /* PonyDebugger.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				F1E1D85815FC417000FB6DA0 /* PonyScript */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		F153058515FD02A8006AE515 /* libPonyDebugger.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libPonyDebugger.a;
+			remoteRef = F153058415FD02A8006AE515 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F1E1D85715FC417000FB6DA0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1E1D86815FC417000FB6DA0 /* InfoPlist.strings in Resources */,
+				F1E1D87415FC417100FB6DA0 /* PSViewController_iPhone.xib in Resources */,
+				F1E1D87715FC417100FB6DA0 /* PSViewController_iPad.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F1E1D85515FC417000FB6DA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1E1D86A15FC417000FB6DA0 /* main.m in Sources */,
+				F1E1D86E15FC417100FB6DA0 /* PSAppDelegate.m in Sources */,
+				F1E1D87115FC417100FB6DA0 /* PSViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F153058C15FD02B7006AE515 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PonyDebugger;
+			targetProxy = F153058B15FD02B7006AE515 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F1E1D86615FC417000FB6DA0 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F1E1D86715FC417000FB6DA0 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		F1E1D87215FC417100FB6DA0 /* PSViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F1E1D87315FC417100FB6DA0 /* en */,
+			);
+			name = PSViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		F1E1D87515FC417100FB6DA0 /* PSViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F1E1D87615FC417100FB6DA0 /* en */,
+			);
+			name = PSViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F1E1D87815FC417100FB6DA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F1E1D87915FC417100FB6DA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F1E1D87B15FC417100FB6DA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PonyScript/PonyScript-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(CONFIGURATION_BUILD_DIR)/usr/local/include\"";
+				INFOPLIST_FILE = "PonyScript/PonyScript-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F1E1D87C15FC417100FB6DA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PonyScript/PonyScript-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(CONFIGURATION_BUILD_DIR)/usr/local/include\"";
+				INFOPLIST_FILE = "PonyScript/PonyScript-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F1E1D85315FC417000FB6DA0 /* Build configuration list for PBXProject "PonyScript" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1E1D87815FC417100FB6DA0 /* Debug */,
+				F1E1D87915FC417100FB6DA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1E1D87A15FC417100FB6DA0 /* Build configuration list for PBXNativeTarget "PonyScript" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1E1D87B15FC417100FB6DA0 /* Debug */,
+				F1E1D87C15FC417100FB6DA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F1E1D85015FC417000FB6DA0 /* Project object */;
+}
