@@ -132,6 +132,7 @@ doNotPauseOnExceptionsAndMuteConsole:(NSNumber *)doNotPauseOnExceptionsAndMuteCo
       fscriptResult = [_interpreter execute:expression];
     }
     @catch (id e) {
+      result = [self runtimeRemoteObjectForObject:e];
       wasThrown = YES;
     }
 
@@ -143,6 +144,8 @@ doNotPauseOnExceptionsAndMuteConsole:(NSNumber *)doNotPauseOnExceptionsAndMuteCo
         else if ([fscriptResult isSyntaxError] == YES) {
           error = [fscriptResult errorMessage];
         }
+        result = [self runtimeRemoteObjectForObject:[fscriptResult errorMessage]];
+        wasThrown = YES;
       }
       else {
         id object = [fscriptResult result];
