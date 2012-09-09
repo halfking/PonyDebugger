@@ -16,6 +16,7 @@
 #import "PDRuntimeTypes.h"
 
 #import <FScript/FSInterpreter.h>
+#import <FScript/FSVoid.h>
 #import <objc/runtime.h>
 
 @interface PDFScriptRuntimeDomainController () {
@@ -60,7 +61,10 @@
 
 - (PDRuntimeRemoteObject *) runtimeRemoteObjectForObject:(id)object {
   PDRuntimeRemoteObject *result = [[PDRuntimeRemoteObject alloc] init];
-  if ([object isKindOfClass:[NSNumber class]] == YES) {
+  if (object == nil) {
+    result.type = @"undefined";
+  }
+  else if ([object isKindOfClass:[NSNumber class]] == YES) {
     result.type = @"number";
     result.value = object;
   }
@@ -68,25 +72,23 @@
     result.type = @"string";
     result.value = object;
   }
+  else if ([object isKindOfClass:[FSVoid class]] == YES) {
+    result.type = @"undefined";
+  }
   else {
-    if (object == nil) {
-      result.type = @"undefined";
+    result.type = @"object";
+    if ([object isKindOfClass:[NSArray class]] == YES || [object isKindOfClass:[NSSet class]] == YES) {
+      result.subtype = @"array";
     }
-    else {
-      result.type = @"object";
-      if ([object isKindOfClass:[NSArray class]] == YES || [object isKindOfClass:[NSSet class]] == YES) {
-        result.subtype = @"array";
-      }
-      else if ([object isKindOfClass:[NSDate class]] == YES) {
-        result.subtype = @"date";
-      }
-      
-      result.classNameString = NSStringFromClass([object class]);
-      result.objectDescription = [object description];
-      result.objectId = [NSString stringWithFormat:@"%p", object];
+    else if ([object isKindOfClass:[NSDate class]] == YES) {
+      result.subtype = @"date";
+    }
     
-      NSLog(@"class=%@, description=%@, objectID=%@", result.classNameString, result.objectDescription, result.objectId);
-    }
+    result.classNameString = NSStringFromClass([object class]);
+    result.objectDescription = [object description];
+    result.objectId = [NSString stringWithFormat:@"%p", object];
+    
+    NSLog(@"class=%@, description=%@, objectID=%@", result.classNameString, result.objectDescription, result.objectId);
   }
   return result;
 }
