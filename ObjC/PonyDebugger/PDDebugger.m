@@ -23,6 +23,7 @@
 #import "PDPageDomainController.h"
 #import "PDIndexedDBDomainController.h"
 #import "PDFScriptRuntimeDomainController.h"
+#import "PDASLConsoleDomainController.h"
 
 static NSString *const PDClientIDKey = @"com.squareup.PDDebugger.clientID";
 
@@ -267,6 +268,12 @@ static NSString *const PDClientIDKey = @"com.squareup.PDDebugger.clientID";
 - (void) enableFScriptRuntimeDebugging
 {
   [self _addController:[PDFScriptRuntimeDomainController defaultInstance]];
+}
+
+#pragma mark Console Logging
+- (void)enableASLConsoleLogging
+{
+  [self _addController:[PDASLConsoleDomainController defaultInstance]];
 }
 
 #pragma mark - Private Methods

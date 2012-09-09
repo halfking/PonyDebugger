@@ -43,6 +43,9 @@
 // Runtime debugging
 - (void)enableFScriptRuntimeDebugging;
 
+// Console logging
+- (void)enableASLConsoleLogging;
+
 @end
 
 @interface NSDate (PDDebugger)
