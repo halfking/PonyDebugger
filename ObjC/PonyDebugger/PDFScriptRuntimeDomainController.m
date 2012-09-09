@@ -70,18 +70,23 @@
   }
   else {
     result.type = @"object";
-    if ([object isKindOfClass:[NSArray class]] == YES || [object isKindOfClass:[NSSet class]] == YES) {
-      result.subtype = @"array";
+    if (object == nil) {
+      result.subtype = @"null";
     }
-    else if ([object isKindOfClass:[NSDate class]] == YES) {
-      result.subtype = @"date";
+    else {
+      if ([object isKindOfClass:[NSArray class]] == YES || [object isKindOfClass:[NSSet class]] == YES) {
+        result.subtype = @"array";
+      }
+      else if ([object isKindOfClass:[NSDate class]] == YES) {
+        result.subtype = @"date";
+      }
+      
+      result.classNameString = NSStringFromClass([object class]);
+      result.objectDescription = [object description];
+      result.objectId = [NSString stringWithFormat:@"%p", object];
+    
+      NSLog(@"class=%@, description=%@, objectID=%@", result.classNameString, result.objectDescription, result.objectId);
     }
-    
-    result.classNameString = NSStringFromClass([object class]);
-    result.objectDescription = [object description];
-    result.objectId = [NSString stringWithFormat:@"%p", object];
-    
-    NSLog(@"class=%@, description=%@, objectID=%@", result.classNameString, result.objectDescription, result.objectId);
   }
   return result;
 }
@@ -201,12 +206,23 @@ getPropertiesWithObjectId:(NSString *)objectId
     
     if ( count > 0) {
       for ( i = 0; i < count; i++ ) {
+        NSString *propertyName = [NSString stringWithUTF8String: property_getName(properties[i])];
+        if ([propertyName hasPrefix:@"accessibility"] == YES) {
+          continue;
+        }
+
         PDRuntimePropertyDescriptor *descriptor = [[PDRuntimePropertyDescriptor alloc] init];
-        
-        // Property name.
-        descriptor.name = [NSString stringWithUTF8String: property_getName(properties[i])];
-        // The value associated with the property.
-        descriptor.value = [self runtimeRemoteObjectForObject:[(__bridge id)object valueForKeyPath:descriptor.name]];
+        descriptor.name = propertyName;
+        id value = nil;
+        @try {
+          value = [(__bridge id)object valueForKeyPath:descriptor.name];
+        }
+        @catch (id e) {
+          descriptor.wasThrown = [NSNumber numberWithBool:YES];
+          value = e;
+        }
+        descriptor.value = [self runtimeRemoteObjectForObject:value];
+
         // True if the value associated with the property may be changed (data descriptors only).
         descriptor.writable = [NSNumber numberWithBool:NO];
         // A function which serves as a getter for the property, or <code>undefined</code> if there is no getter (accessor descriptors only).
@@ -217,8 +233,6 @@ getPropertiesWithObjectId:(NSString *)objectId
         descriptor.configurable = [NSNumber numberWithBool:NO];
         // True if this property shows up during enumeration of the properties on the corresponding object.
         descriptor.enumerable = [NSNumber numberWithBool:NO];
-        // True if the result was thrown during the evaluation.
-        descriptor.wasThrown = NO;
         [results addObject:descriptor];
       }
     }
