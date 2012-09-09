@@ -36,6 +36,12 @@ The Core Data browsing feature allows you to register your applcation's `NSManag
 
 These are read-only stores at the moment.  There are plans to implement data mutation in a future release.
 
+### F-Script Runtime 
+
+The F-Script Runtime feature allows you to evaluate F-Script incide your application.
+
+![PonyDebugger F-Script Runtime Screenshot](https://github.com/pablomarx/PonyDebugger/raw/master/Documentation/Images/FScriptRuntime.png)
+
 
 Quick Start
 -----------
