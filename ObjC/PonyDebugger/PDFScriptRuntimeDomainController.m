@@ -69,11 +69,11 @@
     result.value = object;
   }
   else {
-    result.type = @"object";
     if (object == nil) {
-      result.subtype = @"null";
+      result.type = @"undefined";
     }
     else {
+      result.type = @"object";
       if ([object isKindOfClass:[NSArray class]] == YES || [object isKindOfClass:[NSSet class]] == YES) {
         result.subtype = @"array";
       }
@@ -148,6 +148,9 @@ doNotPauseOnExceptionsAndMuteConsole:(NSNumber *)doNotPauseOnExceptionsAndMuteCo
       }
     }
   }
+  else if ([objectGroup isEqualToString:@"completion"] == YES) {
+    
+  }
 
   callback(result, [NSNumber numberWithBool:wasThrown], error);
 }
@@ -198,46 +201,62 @@ getPropertiesWithObjectId:(NSString *)objectId
   [scanner scanHexInt:&address];
   void *object = (void *)address;
 
+  NSMutableArray *propertyNames = [NSMutableArray array];
+  SEL propertySel;
   NSMutableArray *results = [NSMutableArray array];
-  Class objectClass = object_getClass((__bridge id)object);
-  while(objectClass != NULL) {
-    unsigned int i, count = 0;
-    objc_property_t * properties = class_copyPropertyList(objectClass , &count );
-    
-    if ( count > 0) {
-      for ( i = 0; i < count; i++ ) {
-        NSString *propertyName = [NSString stringWithUTF8String: property_getName(properties[i])];
-        if ([propertyName hasPrefix:@"accessibility"] == YES) {
-          continue;
+  if ([(__bridge id)object isKindOfClass:[NSDictionary class]] == YES) {
+    [propertyNames addObjectsFromArray:[(__bridge NSDictionary *)object allKeys]];
+    propertySel = @selector(objectForKey:);
+  }
+  else {
+    Class objectClass = object_getClass((__bridge id)object);
+    propertySel = @selector(valueForKeyPath:);
+    while(objectClass != NULL) {
+      unsigned int i, count = 0;
+      objc_property_t * properties = class_copyPropertyList(objectClass , &count );
+      
+      if ( count > 0) {
+        for ( i = 0; i < count; i++ ) {
+          NSString *propertyName = [NSString stringWithUTF8String: property_getName(properties[i])];
+          [propertyNames addObject:propertyName];
         }
-
-        PDRuntimePropertyDescriptor *descriptor = [[PDRuntimePropertyDescriptor alloc] init];
-        descriptor.name = propertyName;
-        id value = nil;
-        @try {
-          value = [(__bridge id)object valueForKeyPath:descriptor.name];
-        }
-        @catch (id e) {
-          descriptor.wasThrown = [NSNumber numberWithBool:YES];
-          value = e;
-        }
-        descriptor.value = [self runtimeRemoteObjectForObject:value];
-
-        // True if the value associated with the property may be changed (data descriptors only).
-        descriptor.writable = [NSNumber numberWithBool:NO];
-        // A function which serves as a getter for the property, or <code>undefined</code> if there is no getter (accessor descriptors only).
-        //descriptor.get;
-        // A function which serves as a setter for the property, or <code>undefined</code> if there is no setter (accessor descriptors only).
-        //descriptor.set;
-        // True if the type of this property descriptor may be changed and if the property may be deleted from the corresponding object.
-        descriptor.configurable = [NSNumber numberWithBool:NO];
-        // True if this property shows up during enumeration of the properties on the corresponding object.
-        descriptor.enumerable = [NSNumber numberWithBool:NO];
-        [results addObject:descriptor];
       }
+      free(properties);
+      objectClass = [objectClass superclass];
     }
-    free(properties);
-    objectClass = [objectClass superclass];
+  }
+  
+  for (NSString *aPropertyName in propertyNames) {
+    if ([aPropertyName hasPrefix:@"accessibility"] == YES || [aPropertyName isEqualToString:@"isAccessibilityElement"] == YES) {
+      continue;
+    }
+    
+    PDRuntimePropertyDescriptor *descriptor = [[PDRuntimePropertyDescriptor alloc] init];
+    descriptor.name = aPropertyName;
+    id value = nil;
+    @try {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+      value = [(__bridge id)object performSelector:propertySel withObject:aPropertyName];
+#pragma clang diagnostic pop
+    }
+    @catch (id e) {
+      descriptor.wasThrown = [NSNumber numberWithBool:YES];
+      value = e;
+    }
+    descriptor.value = [self runtimeRemoteObjectForObject:value];
+    
+    // True if the value associated with the property may be changed (data descriptors only).
+    descriptor.writable = [NSNumber numberWithBool:NO];
+    // A function which serves as a getter for the property, or <code>undefined</code> if there is no getter (accessor descriptors only).
+    //descriptor.get;
+    // A function which serves as a setter for the property, or <code>undefined</code> if there is no setter (accessor descriptors only).
+    //descriptor.set;
+    // True if the type of this property descriptor may be changed and if the property may be deleted from the corresponding object.
+    descriptor.configurable = [NSNumber numberWithBool:NO];
+    // True if this property shows up during enumeration of the properties on the corresponding object.
+    descriptor.enumerable = [NSNumber numberWithBool:NO];
+    [results addObject:descriptor];
   }
   
   callback(results, nil);
