@@ -42,6 +42,12 @@ The F-Script Runtime feature allows you to evaluate F-Script inside your applica
 
 ![PonyDebugger F-Script Runtime Screenshot](https://github.com/pablomarx/PonyDebugger/raw/master/Documentation/Images/FScriptRuntime.png)
 
+### ASL Logging
+
+The ASL Logging feature displays log entries in the inspector's console
+
+![PonyDebugger ASL Logging Screenshot](https://github.com/pablomarx/PonyDebugger/raw/master/Documentation/Images/ASL_Logging.png)
+
 
 Quick Start
 -----------
