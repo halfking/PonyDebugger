@@ -16,6 +16,7 @@
 #import "PDRuntimeTypes.h"
 
 #import <FScript/FSInterpreter.h>
+#import <objc/runtime.h>
 
 @interface PDFScriptRuntimeDomainController () {
   FSInterpreter *_interpreter;
@@ -57,6 +58,32 @@
 }
 
 
+- (PDRuntimeRemoteObject *) runtimeRemoteObjectForObject:(id)object {
+  PDRuntimeRemoteObject *result = [[PDRuntimeRemoteObject alloc] init];
+  if ([object isKindOfClass:[NSNumber class]] == YES) {
+    result.type = @"number";
+    result.value = object;
+  }
+  else if ([object isKindOfClass:[NSString class]] == YES) {
+    result.type = @"string";
+    result.value = object;
+  }
+  else {
+    result.type = @"object";
+    if ([object isKindOfClass:[NSArray class]] == YES) {
+      result.subtype = @"array";
+    }
+    else if ([object isKindOfClass:[NSDate class]] == YES) {
+      result.subtype = @"date";
+    }
+    
+    result.classNameString = NSStringFromClass([object class]);
+    result.objectDescription = [object description];
+    result.objectId = [NSString stringWithFormat:@"%p", object];
+  }
+  return result;
+}
+
 #pragma mark - PDRuntimeCommandDelegate
 
 // Evaluates expression on global object.
@@ -87,7 +114,7 @@ doNotPauseOnExceptionsAndMuteConsole:(NSNumber *)doNotPauseOnExceptionsAndMuteCo
   NSLog(@"returnByValue=%@", returnByValue);
   NSLog(@"callback=%@", callback);
 
-  PDRuntimeRemoteObject *result = [[PDRuntimeRemoteObject alloc] init];
+  PDRuntimeRemoteObject *result = nil;
   id error = nil;
   BOOL wasThrown = NO;
   if ([objectGroup isEqualToString:@"console"] == YES) {
@@ -110,27 +137,7 @@ doNotPauseOnExceptionsAndMuteConsole:(NSNumber *)doNotPauseOnExceptionsAndMuteCo
       }
       else {
         id object = [fscriptResult result];
-        if ([object isKindOfClass:[NSNumber class]] == YES) {
-          result.type = @"number";
-          result.value = object;
-        }
-        else if ([object isKindOfClass:[NSString class]] == YES) {
-          result.type = @"string";
-          result.value = object;
-        }
-        else {
-          result.type = @"object";
-          if ([object isKindOfClass:[NSArray class]] == YES) {
-            result.subtype = @"array";
-          }
-          else if ([object isKindOfClass:[NSDate class]] == YES) {
-            result.subtype = @"date";
-          }
-
-          result.classNameString = NSStringFromClass([object class]);
-          result.objectDescription = [object description];
-          result.objectId = [NSString stringWithFormat:@"%p", object];
-        }
+        result = [self runtimeRemoteObjectForObject:object];
       }
     }
   }
@@ -179,7 +186,42 @@ getPropertiesWithObjectId:(NSString *)objectId
   NSLog(@"objectId=%@", objectId);
   NSLog(@"ownProperties=%@", ownProperties);
   NSLog(@"callback=%@", callback);
-  callback([NSArray array], nil);
+  NSScanner *scanner = [NSScanner scannerWithString:objectId];
+  unsigned int address;
+  [scanner scanHexInt:&address];
+  void *object = (void *)address;
+
+  NSMutableArray *results = [NSMutableArray array];
+
+  unsigned int i, count = 0;
+	objc_property_t * properties = class_copyPropertyList( object_getClass((__bridge id)object), &count );
+	
+	if ( count > 0) {
+    for ( i = 0; i < count; i++ ) {
+      PDRuntimePropertyDescriptor *descriptor = [[PDRuntimePropertyDescriptor alloc] init];
+
+      // Property name.
+      descriptor.name = [NSString stringWithUTF8String: property_getName(properties[i])];
+      // The value associated with the property.
+      descriptor.value = [self runtimeRemoteObjectForObject:[(__bridge id)object valueForKeyPath:descriptor.name]];
+      // True if the value associated with the property may be changed (data descriptors only).
+      descriptor.writable = [NSNumber numberWithBool:NO];
+      // A function which serves as a getter for the property, or <code>undefined</code> if there is no getter (accessor descriptors only).
+      //descriptor.get;
+      // A function which serves as a setter for the property, or <code>undefined</code> if there is no setter (accessor descriptors only).
+      //descriptor.set;
+      // True if the type of this property descriptor may be changed and if the property may be deleted from the corresponding object.
+      descriptor.configurable = [NSNumber numberWithBool:NO];
+      // True if this property shows up during enumeration of the properties on the corresponding object.
+      descriptor.enumerable = [NSNumber numberWithBool:NO];
+      // True if the result was thrown during the evaluation.
+      descriptor.wasThrown = NO;
+      [results addObject:descriptor];
+    }
+	}
+  free(properties);
+  
+  callback(results, nil);
 }
 
 // Releases remote object with given id.
