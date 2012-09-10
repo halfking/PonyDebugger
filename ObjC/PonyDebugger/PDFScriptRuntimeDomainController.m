@@ -19,6 +19,24 @@
 #import <FScript/FSVoid.h>
 #import <objc/runtime.h>
 
+const char * property_getTypeString( objc_property_t property )
+{
+	const char * attrs = property_getAttributes( property );
+	if ( attrs == NULL )
+		return ( NULL );
+	
+	static char buffer[256];
+  int len = strlen(attrs);
+	const char * e = strchr( attrs, ',' );
+  if (e) {
+    len = (int)(e - attrs);
+  }
+	memcpy( buffer, attrs, len );
+	buffer[len] = '\0';
+	
+	return ( buffer );
+}
+
 @interface PDFScriptRuntimeDomainController () {
   FSInterpreter *_interpreter;
 }
@@ -93,6 +111,17 @@
   return result;
 }
 
+- (id) objectWithId:(NSString *)objectId {
+  NSScanner *scanner = [NSScanner scannerWithString:objectId];
+  unsigned int address = 0;
+  [scanner scanHexInt:&address];
+  if (address == 0) {
+    return nil;
+  }
+  void *object = (void *)address;
+  return (__bridge id)object;
+}
+
 #pragma mark - PDRuntimeCommandDelegate
 
 // Evaluates expression on global object.
@@ -114,6 +143,11 @@ doNotPauseOnExceptionsAndMuteConsole:(NSNumber *)doNotPauseOnExceptionsAndMuteCo
       callback:(void (^)(PDRuntimeRemoteObject *result, NSNumber *wasThrown, id error))callback
 {
   NSLog(@"%s", __PRETTY_FUNCTION__);
+  if ([objectGroup isEqualToString:@"completion"] == YES) {
+    callback(nil, [NSNumber numberWithBool:NO], nil);
+    return;
+  }
+  
   NSLog(@"domain=%@", domain);
   NSLog(@"expression=%@", expression);
   NSLog(@"objectGroup=%@", objectGroup);
@@ -126,7 +160,7 @@ doNotPauseOnExceptionsAndMuteConsole:(NSNumber *)doNotPauseOnExceptionsAndMuteCo
   PDRuntimeRemoteObject *result = nil;
   id error = nil;
   BOOL wasThrown = NO;
-  if ([objectGroup isEqualToString:@"console"] == YES) {
+  //if ([objectGroup isEqualToString:@"console"] == YES) {
     FSInterpreterResult *fscriptResult = nil;
     @try {
       fscriptResult = [_interpreter execute:expression];
@@ -152,10 +186,7 @@ doNotPauseOnExceptionsAndMuteConsole:(NSNumber *)doNotPauseOnExceptionsAndMuteCo
         result = [self runtimeRemoteObjectForObject:object];
       }
     }
-  }
-  else if ([objectGroup isEqualToString:@"completion"] == YES) {
-    
-  }
+  //}
 
   callback(result, [NSNumber numberWithBool:wasThrown], error);
 }
@@ -184,7 +215,33 @@ doNotPauseOnExceptionsAndMuteConsole:(NSNumber *)doNotPauseOnExceptionsAndMuteCo
   NSLog(@"doNotPauseOnExceptionsAndMuteConsole=%@", doNotPauseOnExceptionsAndMuteConsole);
   NSLog(@"returnByValue=%@", returnByValue);
   NSLog(@"callback=%@", callback);
-  callback(nil, [NSNumber numberWithBool:NO], nil);
+  
+  id error = nil;
+  BOOL exceptionThrown = NO;
+  PDRuntimeRemoteObject *result = nil;
+  if ([functionDeclaration hasPrefix:@"function setPropertyValue"] == YES) {
+    if ([arguments count] == 2) {
+      NSString *propertyName = [[arguments objectAtIndex:0] objectForKey:@"value"];
+      id propertyValue = [[arguments objectAtIndex:1] objectForKey:@"value"];
+      id object = [self objectWithId:objectId];
+      @try {
+        if ([object isKindOfClass:[NSMutableDictionary class]] == YES) {
+          [object setObject:propertyValue forKey:propertyName];
+          result = [object objectForKey:propertyName];
+        }
+        else {
+          [object setValue:propertyValue forKeyPath:propertyName];
+          result = [object valueForKeyPath:propertyName];
+        }
+      }
+      @catch (id e) {
+        exceptionThrown = YES;
+        result = [self runtimeRemoteObjectForObject:e];
+        error = [e description];
+      }
+    }
+  }
+  callback(result, [NSNumber numberWithBool:exceptionThrown], error);
 }
 
 // Returns properties of a given object. Object group of the result is inherited from the target object.
@@ -201,37 +258,46 @@ getPropertiesWithObjectId:(NSString *)objectId
   NSLog(@"objectId=%@", objectId);
   NSLog(@"ownProperties=%@", ownProperties);
   NSLog(@"callback=%@", callback);
-  NSScanner *scanner = [NSScanner scannerWithString:objectId];
-  unsigned int address;
-  [scanner scanHexInt:&address];
-  void *object = (void *)address;
+  
+  id object = [self objectWithId:objectId];
 
-  NSMutableArray *propertyNames = [NSMutableArray array];
-  SEL propertySel;
+  SEL propertyGetterSel;
+  NSMutableDictionary *properties = [NSMutableDictionary dictionary];
   NSMutableArray *results = [NSMutableArray array];
-  if ([(__bridge id)object isKindOfClass:[NSDictionary class]] == YES) {
-    [propertyNames addObjectsFromArray:[(__bridge NSDictionary *)object allKeys]];
-    propertySel = @selector(objectForKey:);
+  if ([object isKindOfClass:[NSDictionary class]] == YES) {
+    BOOL mutable = [object isKindOfClass:[NSMutableDictionary class]];
+    for (NSString *aKey in object) {
+      [properties setObject:[NSNumber numberWithBool:mutable]
+                     forKey:aKey];
+    }
+    propertyGetterSel = @selector(objectForKey:);
   }
   else {
-    Class objectClass = object_getClass((__bridge id)object);
-    propertySel = @selector(valueForKeyPath:);
+    Class objectClass = object_getClass(object);
+    propertyGetterSel = @selector(valueForKeyPath:);
     while(objectClass != NULL) {
       unsigned int i, count = 0;
-      objc_property_t * properties = class_copyPropertyList(objectClass , &count );
+      objc_property_t *classProperties = class_copyPropertyList(objectClass , &count );
       
       if ( count > 0) {
         for ( i = 0; i < count; i++ ) {
-          NSString *propertyName = [NSString stringWithUTF8String: property_getName(properties[i])];
-          [propertyNames addObject:propertyName];
+          NSString *propertyName = [NSString stringWithUTF8String: property_getName(classProperties[i])];
+          NSString *propertyType = [NSString stringWithUTF8String: property_getTypeString(classProperties[i])];
+          [properties setObject:propertyType forKey:propertyName];
         }
       }
-      free(properties);
+      free(classProperties);
       objectClass = [objectClass superclass];
     }
   }
   
-  for (NSString *aPropertyName in propertyNames) {
+  NSArray *writablePropertyTypes = [NSArray arrayWithObjects:
+                                    @"Tc", @"Td", @"Ti", @"TI", @"Tq", 
+                                    @"T@\"NSString\"", @"T@\"NSDate\"", @"T@\"NSNumber\"",
+                                    @"T@\"NSArray\"", @"T@\"NSDictionary\"", @"T@\"NSSet\"",
+                                    nil];
+  
+  for (NSString *aPropertyName in properties) {
     if ([aPropertyName hasPrefix:@"accessibility"] == YES || [aPropertyName isEqualToString:@"isAccessibilityElement"] == YES) {
       continue;
     }
@@ -242,7 +308,8 @@ getPropertiesWithObjectId:(NSString *)objectId
     @try {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-      value = [(__bridge id)object performSelector:propertySel withObject:aPropertyName];
+      value = [object performSelector:propertyGetterSel
+                           withObject:aPropertyName];
 #pragma clang diagnostic pop
     }
     @catch (id e) {
@@ -251,14 +318,20 @@ getPropertiesWithObjectId:(NSString *)objectId
     }
     descriptor.value = [self runtimeRemoteObjectForObject:value];
     
+    id propertyType = [properties objectForKey:aPropertyName];
+    BOOL writable = [writablePropertyTypes containsObject:propertyType];
+    if (!writable && [propertyType isKindOfClass:[NSNumber class]] && [propertyType boolValue] == YES) {
+      writable = YES;
+    }
+    
     // True if the value associated with the property may be changed (data descriptors only).
-    descriptor.writable = [NSNumber numberWithBool:NO];
+    descriptor.writable = [NSNumber numberWithBool:writable];
     // A function which serves as a getter for the property, or <code>undefined</code> if there is no getter (accessor descriptors only).
     //descriptor.get;
     // A function which serves as a setter for the property, or <code>undefined</code> if there is no setter (accessor descriptors only).
     //descriptor.set;
     // True if the type of this property descriptor may be changed and if the property may be deleted from the corresponding object.
-    descriptor.configurable = [NSNumber numberWithBool:NO];
+    descriptor.configurable = [NSNumber numberWithBool:writable];
     // True if this property shows up during enumeration of the properties on the corresponding object.
     descriptor.enumerable = [NSNumber numberWithBool:NO];
     [results addObject:descriptor];
